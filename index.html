@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <!-- Header with Navigation -->
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <a href="/" class="logo">KajLund.com</a>
+
+          <!-- Desktop Navigation -->
+          <nav class="nav-desktop">
+            <a href="/about.html">About</a>
+            <a href="https://blog.kajlund.com" target="_blank">Blog</a>
+            <a href="/portfolio">Portfolio</a>
+            <a href="/contact">Contact</a>
+            <button class="btn-login" id="openLoginBtn">Login</button>
+          </nav>
+
+          <!-- Mobile Menu Button -->
+          <button class="burger-menu" id="burgerBtn" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <nav class="nav-mobile" id="mobileNav">
+          <a href="/about.html">About</a>
+          <a href="https://blog.kajlund.com" target="_blank">Blog</a>
+          <a href="/portfolio">Portfolio</a>
+          <a href="/contact">Contact</a>
+          <button class="btn-login-mobile" id="openLoginBtnMobile">Login</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">Welcome</h1>
+          <p class="hero-quote" id="quoteText"></p>
+          <p class="hero-author" id="quoteAuthor"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Dialog -->
+    <div class="dialog-overlay" id="loginDialog">
+      <div class="dialog">
+        <button class="dialog-close" id="closeDialogBtn" aria-label="Close dialog">&times;</button>
+        <h2 class="dialog-title">Login</h2>
+        <form class="login-form" id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          <div class="form-error" id="errorMessage"></div>
+          <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+
+</html>

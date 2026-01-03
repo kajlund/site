@@ -1,0 +1,182 @@
+// Random Quotes
+const quotes = [
+  {
+    text: "The only way to do great work is to love what you do.",
+    author: "Steve Jobs",
+  },
+  {
+    text: "Innovation distinguishes between a leader and a follower.",
+    author: "Steve Jobs",
+  },
+  {
+    text: "Life is what happens when you're busy making other plans.",
+    author: "John Lennon",
+  },
+  {
+    text: "The future belongs to those who believe in the beauty of their dreams.",
+    author: "Eleanor Roosevelt",
+  },
+  {
+    text: "It is during our darkest moments that we must focus to see the light.",
+    author: "Aristotle",
+  },
+  {
+    text: "Be yourself; everyone else is already taken.",
+    author: "Oscar Wilde",
+  },
+  {
+    text: "The only impossible journey is the one you never begin.",
+    author: "Tony Robbins",
+  },
+]
+
+// Display Random Quote
+function displayRandomQuote() {
+  const randomIndex = Math.floor(Math.random() * quotes.length)
+  const quote = quotes[randomIndex]
+  document.getElementById("quoteText").textContent = `"${quote.text}"`
+  document.getElementById("quoteAuthor").textContent = `— ${quote.author}`
+}
+
+// Mobile Menu Toggle
+const burgerBtn = document.getElementById("burgerBtn")
+const mobileNav = document.getElementById("mobileNav")
+
+burgerBtn.addEventListener("click", () => {
+  burgerBtn.classList.toggle("active")
+  mobileNav.classList.toggle("active")
+})
+
+// Login Dialog
+const loginDialog = document.getElementById("loginDialog")
+const openLoginBtn = document.getElementById("openLoginBtn")
+const openLoginBtnMobile = document.getElementById("openLoginBtnMobile")
+const closeDialogBtn = document.getElementById("closeDialogBtn")
+
+function openLoginDialog() {
+  loginDialog.classList.add("active")
+  document.body.style.overflow = "hidden"
+}
+
+function closeLoginDialog() {
+  loginDialog.classList.remove("active")
+  document.body.style.overflow = ""
+}
+
+openLoginBtn.addEventListener("click", openLoginDialog)
+openLoginBtnMobile.addEventListener("click", () => {
+  openLoginDialog()
+  mobileNav.classList.remove("active")
+  burgerBtn.classList.remove("active")
+})
+
+closeDialogBtn.addEventListener("click", closeLoginDialog)
+
+loginDialog.addEventListener("click", (e) => {
+  if (e.target === loginDialog) {
+    closeLoginDialog()
+  }
+})
+
+// Login Form Submission
+const loginForm = document.getElementById("loginForm")
+const errorMessage = document.getElementById("errorMessage")
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault()
+
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
+  const submitBtn = loginForm.querySelector(".btn-submit")
+
+  // Clear previous error
+  errorMessage.textContent = ""
+
+  // Disable submit button
+  submitBtn.disabled = true
+  submitBtn.textContent = "Signing in..."
+
+  try {
+    // Replace this URL with your actual authentication endpoint
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+
+    const data = await response.json()
+
+    if (response.ok && data.token) {
+      // Store JWT token in localStorage
+      localStorage.setItem("jwt_token", data.token)
+
+      // Optional: Store user info
+      if (data.user) {
+        localStorage.setItem("user_info", JSON.stringify(data.user))
+      }
+
+      // Success - close dialog and redirect or update UI
+      closeLoginDialog()
+      loginForm.reset()
+      alert("Login successful!")
+
+      // You can redirect to another page or update the UI here
+      // window.location.href = '/dashboard';
+    } else {
+      errorMessage.textContent = data.message || "Invalid email or password"
+    }
+  } catch (error) {
+    console.error("Login error:", error)
+    errorMessage.textContent = "An error occurred. Please try again."
+  } finally {
+    // Re-enable submit button
+    submitBtn.disabled = false
+    submitBtn.textContent = "Sign In"
+  }
+})
+
+// Check if user is already logged in
+function checkAuth() {
+  const token = localStorage.getItem("jwt_token")
+  if (token) {
+    // User is logged in, you can update UI accordingly
+    console.log("User is authenticated")
+    // You might want to hide login button and show logout button
+  }
+}
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+  displayRandomQuote()
+  checkAuth()
+
+  // Change quote every 10 seconds
+  setInterval(displayRandomQuote, 10000)
+})
+
+// Utility function to get JWT token
+function getAuthToken() {
+  return localStorage.getItem("jwt_token")
+}
+
+// Utility function to make authenticated requests
+async function authenticatedFetch(url, options = {}) {
+  const token = getAuthToken()
+
+  if (!token) {
+    throw new Error("No authentication token found")
+  }
+
+  const headers = {
+    ...options.headers,
+    Authorization: `Bearer ${token}`,
+  }
+
+  return fetch(url, { ...options, headers })
+}
+
+// Export utility functions for use in other scripts
+window.getAuthToken = getAuthToken
+window.authenticatedFetch = authenticatedFetch

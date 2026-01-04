@@ -1,41 +1,10 @@
-// Random Quotes
-const quotes = [
-  {
-    text: "The only way to do great work is to love what you do.",
-    author: "Steve Jobs",
-  },
-  {
-    text: "Innovation distinguishes between a leader and a follower.",
-    author: "Steve Jobs",
-  },
-  {
-    text: "Life is what happens when you're busy making other plans.",
-    author: "John Lennon",
-  },
-  {
-    text: "The future belongs to those who believe in the beauty of their dreams.",
-    author: "Eleanor Roosevelt",
-  },
-  {
-    text: "It is during our darkest moments that we must focus to see the light.",
-    author: "Aristotle",
-  },
-  {
-    text: "Be yourself; everyone else is already taken.",
-    author: "Oscar Wilde",
-  },
-  {
-    text: "The only impossible journey is the one you never begin.",
-    author: "Tony Robbins",
-  },
-]
-
-// Display Random Quote
-function displayRandomQuote() {
-  const randomIndex = Math.floor(Math.random() * quotes.length)
-  const quote = quotes[randomIndex]
-  document.getElementById("quoteText").textContent = `"${quote.text}"`
-  document.getElementById("quoteAuthor").textContent = `— ${quote.author}`
+// Display Advice
+async function displayRandomQuote() {
+  const res = await fetch('https://api.adviceslip.com/advice');
+  const data = await res.json();
+  console.log(data);
+  document.getElementById("quoteText").textContent = `"${data.slip.advice}"`
+  document.getElementById("quoteAuthor").textContent = `— Unknown`
 }
 
 // Mobile Menu Toggle
@@ -152,8 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
   displayRandomQuote()
   checkAuth()
 
-  // Change quote every 10 seconds
-  setInterval(displayRandomQuote, 10000)
+  // Change quote every 20 seconds
+  setInterval(displayRandomQuote, 20000)
 })
 
 // Utility function to get JWT token

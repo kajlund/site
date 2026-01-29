@@ -67,7 +67,7 @@ loginForm.addEventListener("submit", async (e) => {
 
   try {
     // Replace this URL with your actual authentication endpoint
-    const response = await fetch("https://authz.kajlund.com/api/v1/login", {
+    const response = await fetch("https://authz.kajlund.com/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,10 +1,15 @@
 // Display Advice
 async function displayRandomQuote() {
-  const res = await fetch('https://api.adviceslip.com/advice');
-  const data = await res.json();
-  console.log(data);
-  document.getElementById("quoteText").textContent = `"${data.slip.advice}"`
-  document.getElementById("quoteAuthor").textContent = `— Unknown`
+  // const res = await fetch('https://api.adviceslip.com/advice');
+  const response = await fetch('https://proverbs.kajlund.com/proverbs/random');
+  if (response.ok) {
+    const res = await response.json();
+    console.log(res);
+    document.getElementById("quoteText").textContent = `"${res.data.content}"`
+    document.getElementById("quoteAuthor").textContent = res.data.author;
+  } else {
+    console.error("Failed to fetch quote")
+  }
 }
 
 // Mobile Menu Toggle
@@ -66,7 +71,6 @@ loginForm.addEventListener("submit", async (e) => {
   submitBtn.textContent = "Signing in..."
 
   try {
-    // Replace this URL with your actual authentication endpoint
     const response = await fetch("https://authz.kajlund.com/auth/login", {
       method: "POST",
       headers: {
@@ -77,15 +81,15 @@ loginForm.addEventListener("submit", async (e) => {
       credentials: 'include'
     })
 
-    const data = await response.json()
+    const res = await response.json()
 
-    if (response.ok && data.token) {
+    if (response.ok) {
       // Store JWT token in localStorage
-      localStorage.setItem("jwt_token", data.token)
+      localStorage.setItem("access_token", res?.data?.accessToken)
 
       // Optional: Store user info
-      if (data.user) {
-        localStorage.setItem("user_info", JSON.stringify(data.user))
+      if (res?.data?.user) {
+        localStorage.setItem("user_info", JSON.stringify(res.data.user))
       }
 
       // Success - close dialog and redirect or update UI

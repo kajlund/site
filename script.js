@@ -67,12 +67,14 @@ loginForm.addEventListener("submit", async (e) => {
 
   try {
     // Replace this URL with your actual authentication endpoint
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("https://authz.kajlund.com/api/v1/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
+      // Important: This tells the browser to include/save the cookies!
+      credentials: 'include'
     })
 
     const data = await response.json()

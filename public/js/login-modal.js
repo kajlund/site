@@ -142,6 +142,7 @@ export class LoginModal extends LitElement {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
+        credentials: 'include',
       });
 
       if (!response.ok) {

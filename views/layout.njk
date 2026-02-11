@@ -87,6 +87,14 @@
         document.body.style.overflow = isOpen ? 'hidden' : '';
       }
 
+      function closeMenu() {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+
       toggle.addEventListener('click', toggleMenu);
 
       // Close if user clicks the overlay itself
@@ -94,7 +102,11 @@
 
       // Close menu when clicking a link
       nav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', toggleMenu);
+        link.addEventListener('click', () => {
+          // We use a small timeout or just immediate closure
+          // to ensure the state resets before the focus shifts
+          closeMenu();
+        });
       });
 
       const authModal = document.getElementById('authModal');
@@ -103,6 +115,15 @@
       openBtn.addEventListener('click', () => {
         authModal.open = true;
         document.body.style.overflow = 'hidden'; // Lock scroll
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          // If the menu is still open when we return, shut it down
+          if (nav.classList.contains('active')) {
+              closeMenu();
+          }
+        }
       });
     </script>
   </body>

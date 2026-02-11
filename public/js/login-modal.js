@@ -138,7 +138,7 @@ export class LoginModal extends LitElement {
     const credentials = Object.fromEntries(fd);
 
     try {
-      const response = await fetch('http://localhost:3002/auth/login', {
+      const response = await fetch('https://authz.kajlund.com/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),

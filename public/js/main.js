@@ -1,7 +1,9 @@
 // Display Advice
 async function displayRandomQuote() {
   // const res = await fetch('http://api.adviceslip.com/advice');
-  const response = await fetch('http://localhost:3001/api/v1/proverbs/random');
+  const response = await fetch(
+    'https://proverbs.kajlund.com/api/v1/proverbs/random',
+  );
   if (response.ok) {
     const res = await response.json();
     console.log(res);

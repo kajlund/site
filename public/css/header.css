@@ -1,0 +1,244 @@
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  background: var(--color-nav-background);
+  border-bottom: 1px solid var(--color-nav-border);
+  z-index: 2000;
+  padding: 0 1rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6rem;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 2.4rem;
+  text-decoration: none;
+  color: var(--color-primary);
+  transition: transform 0.2s ease;
+  letter-spacing: -1px;
+  margin-right: 2rem;
+}
+
+.brand:hover {
+  transform: scale(1.05);
+}
+
+/* --- BASE & DESKTOP --- */
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  background: var(--color-nav-background);
+  border-bottom: 1px solid var(--color-nav-border);
+  padding: 0 1rem;
+  z-index: 2002;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px; /* Optional: keeps your header from stretching too wide */
+  margin: 0 auto;
+  height: 100%;
+}
+
+/* Burger: Hidden by default (Desktop) */
+.burger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2002; /* Above the side-drawer */
+}
+
+.burger span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: var(--color-primary);
+  margin: 5px 0;
+  transition: 0.3s;
+}
+
+/* Nav Links: Horizontal by default (Desktop) */
+.nav-links {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 2001; /* Higher than the overlay */
+}
+
+/* --- LOGIN BUTTON RESTORATION --- */
+.login-btn {
+  /* Reset default button styles */
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+
+  /* The "Pill" look */
+  margin-left: 1rem; /* Space from other links on desktop */
+  padding: 0.8rem 2rem;
+  background: var(--color-primary);
+  color: white !important; /* Force white text even in mobile drawer */
+  border-radius: 2rem;
+  font-weight: 700;
+  font-size: 1.4rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.login-btn:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(115, 30, 206, 0.3);
+  transform: translateY(-2px);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+/* --- MOBILE DRAWER (768px and below) --- */
+@media (max-width: 768px) {
+  .burger {
+    display: block; /* Show burger on mobile */
+  }
+
+  .nav-links {
+    position: fixed;
+    top: var(--header-height);
+    right: -100%; /* Fully off-screen */
+    width: 280px; /* Fixed width so it's a drawer, not full screen */
+    height: 100vh;
+    background: var(--color-background); /* Dark purple */
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 8rem 2rem;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -10px 0 20px rgba(0, 0, 0, 0.4);
+    z-index: 2001; /* Ensure this is between header and burger */
+  }
+
+  .nav-links.active {
+    right: 0; /* Slide in */
+  }
+
+  .nav-links li {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Burger Animation to 'X' */
+  .burger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .burger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .burger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  .login-btn {
+    margin: 2rem 0; /* Center it in the drawer with vertical spacing */
+    width: 100%; /* Make it a full-width button on mobile */
+    text-align: center;
+    font-size: 1.6rem;
+    padding: 1.2rem;
+  }
+}
+
+/* --- SHARED LINK STYLES --- */
+.nav-links li a {
+  padding: 0.5rem 1rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0.5rem; /* Soft corners for hover background */
+  transition: all 0.2s ease;
+  display: block;
+}
+
+/* --- DESKTOP HOVER --- */
+/* (When the screen is wide and background is white) */
+@media (min-width: 769px) {
+  .nav-links li a:hover {
+    background: rgba(115, 30, 206, 0.08); /* Very light purple tint */
+    color: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+}
+
+/* --- MOBILE HOVER --- */
+/* (When background is dark purple) */
+@media (max-width: 768px) {
+  .nav-links li a {
+    color: white; /* Base color for dark drawer */
+    padding: 1.2rem 1.5rem;
+    width: 100%;
+  }
+
+  .nav-links li a:hover {
+    background: rgba(255, 255, 255, 0.1); /* Light white glow on dark */
+    padding-left: 2rem; /* Nice slide-in effect */
+    color: white;
+  }
+}
+
+/* --- LOGIN BUTTON HOVER --- */
+.login-btn {
+  /* Reset and Base */
+  border: none;
+  background: var(--color-primary);
+  color: white !important;
+  padding: 0.8rem 2rem;
+  border-radius: 2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy feel */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.05); /* Slightly grows */
+  box-shadow: 0 6px 15px rgba(115, 30, 206, 0.4); /* Purple glow */
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background: var(--color-overlay);
+  backdrop-filter: blur(4px);
+
+  /* Start hidden */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Allows clicking through it when hidden */
+
+  z-index: 1500; /* Between content and nav drawer */
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto; /* Catch clicks to close the menu */
+}

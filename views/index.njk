@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+
+{% block head %}
+  <link rel="stylesheet" href="css/home.css">
+{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">{{message}}</h1>
+      <div class="quote-wrapper">
+        <div class="quote-inner">
+          <p class="hero-quote" id="quoteText">&quot;{{quote.content}}&quot;</p>
+          <p class="hero-author" id="quoteAuthor">— {{quote.author}}</p>
+        </div>
+      </div>
+
+      <div class="cta-group">
+			  <a href="/demos" class="btn-primary">View Demos</a>
+			  <a href="/about" class="btn-outline">Learn More</a>
+		  </div>
+    </div>
+  </section>
+{% endblock %}

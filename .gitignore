@@ -1,0 +1,11 @@
+.env*
+.idea/
+.vscode
+.DS_Store
+*.log
+node_modules/
+data/
+
+coverage/
+
+content/

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico">
+    <title>kajlund.com -{{ title }}</title>
+    <link rel="stylesheet" href="css/_root.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/button.css">
+    {% block head %}{% endblock %}
+    <script>
+    </script>
+  </head>
+
+  <body>
+    <header class="header">
+        <div class="header-content">
+
+          <a href="/" class="brand">kajlund.com</a>
+
+          <nav class="navbar">
+            <button class="burger" id="menu-toggle" aria-label="Toggle menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+              <li><a href="/">Home</a></li>
+              <li>
+                <a href="https://blog.kajlund.com" target="_blank">Blog</a>
+              </li>
+              <li>
+                <a href="/demos">Demos</a>
+              </li>
+              <li><a href="/about">About</a></li>
+              <li><button class="login-btn" id="openLoginBtn">Login</button></li>
+            </ul>
+          </nav>
+
+        </div>
+    </header>
+
+    <main>
+      {# Inject page content #}
+      {% block content %}{% endblock %}
+    </main>
+
+    <login-modal id="authModal">
+    <div slot="form-fields">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" required>
+      </div>
+    </div>
+  </login-modal>
+
+    {# Mobile Menu Overlay #}
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    {# Include SVG icons #}
+    {% include "partials/icons.njk" %}
+
+    {# Include app main script #}
+    <script src="js/main.js"></script>
+    <script type="module" src="js/login-modal.js"></script>
+
+    {# Include individual page scripts #}
+    {% block scripts %}{% endblock %}
+    <script>
+      const toggle = document.getElementById('menu-toggle');
+      const nav = document.getElementById('nav-links');
+      const overlay = document.getElementById('menu-overlay'); // Add this
+
+      function toggleMenu() {
+        const isOpen = nav.classList.toggle('active');
+        toggle.classList.toggle('active');
+        overlay.classList.toggle('active'); // Now the overlay gets the class
+
+        toggle.setAttribute('aria-expanded', isOpen);
+
+        // Prevent background scrolling when menu is open
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      }
+
+      toggle.addEventListener('click', toggleMenu);
+
+      // Close if user clicks the overlay itself
+      overlay.addEventListener('click', toggleMenu);
+
+      // Close menu when clicking a link
+      nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', toggleMenu);
+      });
+
+      const authModal = document.getElementById('authModal');
+      const openBtn = document.getElementById('openLoginBtn');
+
+      openBtn.addEventListener('click', () => {
+        authModal.open = true;
+        document.body.style.overflow = 'hidden'; // Lock scroll
+      });
+    </script>
+  </body>
+</html>

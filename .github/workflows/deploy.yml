@@ -16,7 +16,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            # Load NVM and Node into this specific session
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             git config --global --add safe.directory /var/www/site
             cd /var/www/site || { echo "Folder not found"; exit 1; }
             git fetch --all
             git reset --hard origin/main
+            npm install
+            pm2 startOrRestart /var/www/ecosystem.config.cjs --env production
+            pm2 save

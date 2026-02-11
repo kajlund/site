@@ -8,28 +8,29 @@ export class LoginModal extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
     error: { type: String },
+    loading: { type: Boolean },
   };
 
   static styles = css`
     :host {
-      display: contents; /* Ensures the component doesn't break layout */
+      display: contents;
     }
 
-    .dialog-overlay {
+    .overlay {
       position: fixed;
       inset: 0;
-      background: var(--color-overlay, rgba(0, 0, 0, 0.5));
+      background: var(--color-overlay, rgba(0, 0, 0, 0.6));
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 3000;
+      z-index: 4000;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
     }
 
-    :host([open]) .dialog-overlay {
+    :host([open]) .overlay {
       opacity: 1;
       visibility: visible;
     }
@@ -37,77 +38,176 @@ export class LoginModal extends LitElement {
     .dialog {
       background: var(--color-background, #20043d);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 1rem;
+      border-radius: 1.25rem;
       padding: 2.5rem;
       width: 90%;
       max-width: 400px;
-      position: relative;
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     :host([open]) .dialog {
-      transform: scale(1);
+      transform: translateY(0);
     }
 
-    .close-btn {
+    h2 {
+      color: white;
+      margin: 0 0 1.5rem 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--color-primary);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .error-banner {
+      background: rgba(220, 38, 38, 0.15);
+      color: #ff4d4d;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+
+    .submit-btn:disabled {
+      filter: grayscale(1) opacity(0.5);
+      cursor: not-allowed;
+    }
+
+    .close-x {
       position: absolute;
       top: 1rem;
-      right: 1.5rem;
+      right: 1.2rem;
       background: none;
       border: none;
-      color: var(--color-text-muted);
-      font-size: 2rem;
+      color: white;
+      font-size: 1.5rem;
       cursor: pointer;
+      opacity: 0.5;
     }
 
-    .error-msg {
-      color: #ff4444;
-      font-size: 0.9rem;
-      margin-top: 1rem;
+    .close-x:hover {
+      opacity: 1;
     }
   `;
 
-  close() {
-    this.open = false;
-    this.error = '';
-    // Unlock body scroll
-    document.body.style.overflow = '';
+  async handleLogin(e) {
+    e.preventDefault();
+    this.loading = true;
+    this.error = null;
+
+    const fd = new FormData(e.target);
+    const credentials = Object.fromEntries(fd);
+
+    try {
+      const response = await fetch('http://localhost:3002/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Login failed');
+      }
+
+      // Success logic
+      console.log('Success! Closing modal.');
+      this.dispatchEvent(new CustomEvent('login-success'));
+      this.close();
+    } catch (err) {
+      this.error = err.message;
+    } finally {
+      this.loading = false;
+    }
   }
 
-  handleLogin(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
-
-    // Simulate API call
-    console.log('Logging in with:', data);
-    this.error = 'Invalid credentials. Please try again.';
+  close() {
+    this.open = false;
+    this.error = null;
+    document.body.style.overflow = '';
   }
 
   render() {
     return html`
       <div
-        class="dialog-overlay"
+        class="overlay"
         @click="${(e) =>
-          e.target.classList.contains('dialog-overlay') && this.close()}"
+          e.target.classList.contains('overlay') && this.close()}"
       >
         <div class="dialog">
-          <button class="close-btn" @click="${this.close}">&times;</button>
-          <h2 style="color: white; margin-bottom: 1.5rem;">Login</h2>
+          <button class="close-x" @click="${this.close}">&times;</button>
+          <h2>Login</h2>
 
-          <form @submit="${this.handleLogin}" class="login-form">
-            <slot name="form-fields"></slot>
+          ${this.error
+            ? html`<div class="error-banner">${this.error}</div>`
+            : ''}
+
+          <form @submit="${this.handleLogin}">
+            <div class="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                required
+                ?disabled="${this.loading}"
+              />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                required
+                ?disabled="${this.loading}"
+              />
+            </div>
             <button
               type="submit"
-              class="login-btn"
-              style="width: 100%; margin: 1rem 0 0 0;"
+              class="submit-btn"
+              ?disabled="${this.loading}"
             >
-              Sign In
+              ${this.loading ? 'Authenticating...' : 'Sign In'}
             </button>
           </form>
-
-          ${this.error ? html`<div class="error-msg">${this.error}</div>` : ''}
         </div>
       </div>
     `;

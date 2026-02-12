@@ -138,16 +138,15 @@ export class LoginModal extends LitElement {
     const credentials = Object.fromEntries(fd);
 
     try {
-      const response = await fetch('https://authz.kajlund.com/auth/login', {
+      const response = await fetch('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
-        credentials: 'include',
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.detail || 'Login failed');
       }
 
       // Success logic

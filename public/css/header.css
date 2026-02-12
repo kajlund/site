@@ -51,6 +51,14 @@ header {
   height: 100%;
 }
 
+.user-welcome {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
 /* Burger: Hidden by default (Desktop) */
 .burger {
   display: none;

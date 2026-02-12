@@ -1,9 +1,15 @@
 {% extends "layout.njk" %}
 
+{% block head %}
+  <link rel="stylesheet" href="css/error.css">
+{% endblock %}
+
 {% block content %}
-  <article>
-    <h1>{{ title }}</h1>
-    <h3>{{ error.statusCode }} - {{ error.message }}</h3>
-    <p>{{ error.detail }}</p>
-  </article>
+  <div class="container">
+    <section class="error">
+      <h1 class="title">{{ title }}</h1>
+      <h3>{{ error.statusCode }} - {{ error.message }}</h3>
+      <p>{{ error.detail }}</p>
+    </section>
+  </div>
 {% endblock %}

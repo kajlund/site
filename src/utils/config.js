@@ -11,6 +11,8 @@ const configSchema = z.strictObject({
     .optional()
     .default('info'),
   logHttp: z.coerce.boolean().optional().default(false),
+  accessTokenSecret: z.string().min(30),
+  authUrl: z.string().trim(),
   randomQuoteUrl: z.string().trim(),
 });
 
@@ -20,6 +22,8 @@ function getEnvConfig() {
     port: process.env.PORT,
     logLevel: process.env.LOG_LEVEL,
     logHttp: process.env.LOG_HTTP,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+    authUrl: process.env.AUTH_URL,
     randomQuoteUrl: process.env.RANDOM_QUOTE_URL,
   };
 }
@@ -31,6 +35,10 @@ export function getConfig(config = {}) {
     console.log(result.error);
     throw new Error('Configuration faulty');
   }
-  const cnf = { ...result.data, isDev: result.data.env === 'development' };
+  const cnf = {
+    ...result.data,
+    isDev: result.data.env === 'development',
+    isProd: result.data.env === 'production',
+  };
   return cnf;
 }

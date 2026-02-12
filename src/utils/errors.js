@@ -2,7 +2,7 @@ export class AppError extends Error {
   constructor(
     statusCode = 500,
     message = 'Internal Server Error',
-    details = '',
+    detail = '',
     errors = [],
     stack = '',
   ) {
@@ -10,7 +10,7 @@ export class AppError extends Error {
     this.name = this.constructor.name;
     this.isAppError = true;
     this.statusCode = statusCode;
-    this.details = details;
+    this.detail = detail;
     this.errors = errors;
     if (stack) {
       this.stack = stack;

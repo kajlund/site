@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import { rateLimit } from 'express-rate-limit';
 import nunjucks from 'nunjucks';
@@ -13,6 +14,7 @@ export function getApp(cnf, log) {
   // Add middleware
   app.disable('x-powered-by');
   app.set('trust proxy', 1); // trust first proxy
+  app.use(cookieParser());
   app.use(express.json({ limit: '100kb' }));
   app.use(express.urlencoded({ extended: true, limit: '1000kb' }));
   app.use(express.static('public'));
@@ -44,15 +46,6 @@ export function getApp(cnf, log) {
       month: 'long',
       day: 'numeric',
     });
-  });
-
-  nj.addFilter('readingTime', (content) => {
-    const wordsPerMinute = 225;
-    // Remove HTML tags and split by whitespace
-    const text = content.replace(/<\/?[^>]+(>|$)/g, '');
-    const wordCount = text.split(/\s+/).length;
-    const minutes = Math.ceil(wordCount / wordsPerMinute);
-    return `${minutes} min read`;
   });
 
   // Logging Middleware

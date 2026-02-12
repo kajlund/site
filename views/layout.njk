@@ -34,7 +34,12 @@
                 <a href="/demos">Demos</a>
               </li>
               <li><a href="/about">About</a></li>
-              <li><button class="login-btn" id="openLoginBtn">Login</button></li>
+              {% if user %}
+                <li class="user-welcome">{{ user.alias }}</li>
+                <li><a href="/auth/logout">Logout</a></li>
+              {% else %}
+                <li><button class="login-btn" id="openLoginBtn">Login</button></li>
+              {% endif %}
             </ul>
           </nav>
 
@@ -46,7 +51,7 @@
       {% block content %}{% endblock %}
     </main>
 
-    <login-modal id="authModal">
+    <login-modal id="loginModal">
     <div slot="form-fields">
       <div class="form-group">
         <label>Email</label>
@@ -65,66 +70,81 @@
     {# Include SVG icons #}
     {% include "partials/icons.njk" %}
 
-    {# Include app main script #}
-    <script src="js/main.js"></script>
+    {# Include components #}
     <script type="module" src="js/login-modal.js"></script>
+
+    {# Include app main script #}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Element Selectors ---
+        const selectors = {
+          toggle: document.getElementById('menu-toggle'),
+          nav: document.getElementById('nav-links'),
+          overlay: document.getElementById('menu-overlay'),
+          loginModal: document.getElementById('loginModal'),
+          openLoginBtn: document.getElementById('openLoginBtn')
+        };
+
+        // --- 2. Shared Functions ---
+        const closeMenu = () => {
+          selectors.nav?.classList.remove('active');
+          selectors.toggle?.classList.remove('active');
+          selectors.overlay?.classList.remove('active');
+          document.body.style.overflow = '';
+        };
+
+        const toggleMenu = () => {
+          const isOpen = selectors.nav?.classList.toggle('active');
+          selectors.toggle?.classList.toggle('active');
+          selectors.overlay?.classList.toggle('active');
+          document.body.style.overflow = isOpen ? 'hidden' : '';
+        };
+
+        // --- 3. Event Listeners (With Null Checks) ---
+
+        // Burger Toggle
+        selectors.toggle?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleMenu();
+        });
+
+        // Clicking the dark overlay to close
+        selectors.overlay?.addEventListener('click', closeMenu);
+
+        // Close menu when clicking any link
+        selectors.nav?.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', closeMenu);
+        });
+
+        // --- 4. Login Modal Logic ---
+
+        // This is where your bug was: openLoginBtn might be missing if logged in!
+        if (selectors.openLoginBtn && selectors.loginModal) {
+          selectors.openLoginBtn.addEventListener('click', () => {
+            // Close mobile menu first if it's open
+            closeMenu();
+            // Open the Lit component
+            selectors.loginModal.open = true;
+            document.body.style.overflow = 'hidden';
+          });
+
+          // Handle the custom event from our Lit component
+          selectors.loginModal.addEventListener('login-success', () => {
+            // Refresh the page to update Nunjucks nav (Hello, User!)
+            window.location.reload();
+          });
+        }
+
+        // --- 5. Global Clean-up ---
+        // If user hits the "Back" button or switches tabs, clean the UI
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') closeMenu();
+        });
+      });
+    </script>
 
     {# Include individual page scripts #}
     {% block scripts %}{% endblock %}
-    <script>
-      const toggle = document.getElementById('menu-toggle');
-      const nav = document.getElementById('nav-links');
-      const overlay = document.getElementById('menu-overlay'); // Add this
 
-      function toggleMenu() {
-        const isOpen = nav.classList.toggle('active');
-        toggle.classList.toggle('active');
-        overlay.classList.toggle('active'); // Now the overlay gets the class
-
-        toggle.setAttribute('aria-expanded', isOpen);
-
-        // Prevent background scrolling when menu is open
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-      }
-
-      function closeMenu() {
-        nav.classList.remove('active');
-        toggle.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
-        toggle.setAttribute('aria-expanded', 'false');
-      }
-
-      toggle.addEventListener('click', toggleMenu);
-
-      // Close if user clicks the overlay itself
-      overlay.addEventListener('click', toggleMenu);
-
-      // Close menu when clicking a link
-      nav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          // We use a small timeout or just immediate closure
-          // to ensure the state resets before the focus shifts
-          closeMenu();
-        });
-      });
-
-      const authModal = document.getElementById('authModal');
-      const openBtn = document.getElementById('openLoginBtn');
-
-      openBtn.addEventListener('click', () => {
-        authModal.open = true;
-        document.body.style.overflow = 'hidden'; // Lock scroll
-      });
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          // If the menu is still open when we return, shut it down
-          if (nav.classList.contains('active')) {
-              closeMenu();
-          }
-        }
-      });
-    </script>
   </body>
 </html>

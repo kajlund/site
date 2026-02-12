@@ -60,44 +60,6 @@ body {
   scroll-margin-top: var(--header-height);
 }
 
-.about-title {
-  margin-top: 4rem;
-  margin-bottom: 2rem;
-}
-
-.about-content {
-  display: flex;
-  font-size: 2rem;
-}
-
-.about-img {
-  margin-left: 1rem;
-}
-
-.about-img img {
-  max-width: 15rem;
-  border: 3px solid var(--text);
-  border-radius: 1rem;
-}
-
-.history {
-  margin-top: 4rem;
-  font-size: 2rem;
-}
-
-.history h2 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.history h3 {
-  margin-top: 1.5rem;
-}
-
-.history ul {
-  margin-left: 2rem;
-}
-
 /* Login Dialog */
 .dialog-overlay {
   display: none;

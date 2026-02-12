@@ -1,11 +1,13 @@
 import express from 'express';
 
+import { getAuthRoutes } from './auth.routes.js';
 import { getSiteRoutes } from './site.routes.js';
 
 export function getRouter(cnf, log) {
+  const authRoutes = getAuthRoutes(cnf, log);
   const siteRoutes = getSiteRoutes(cnf, log);
 
-  const groups = [siteRoutes];
+  const groups = [authRoutes, siteRoutes];
   const router = express.Router();
 
   groups.forEach(({ group, routes }) => {

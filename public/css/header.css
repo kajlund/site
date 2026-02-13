@@ -116,7 +116,41 @@ header {
   z-index: 2001; /* Higher than the overlay */
 }
 
-/* --- LOGIN BUTTON RESTORATION --- */
+.nav-user-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.avatar-link {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.avatar-link:hover {
+  transform: scale(1.05);
+}
+
+.nav-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  object-fit: cover; /* Prevents stretching if the image isn't square */
+  border: 2px solid var(--color-primary);
+  background-color: var(--color-background);
+}
+
+.logout-link {
+  font-size: 1.4rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.logout-link:hover {
+  color: var(--color-primary);
+}
+
 .login-btn {
   /* Reset default button styles */
   border: none;

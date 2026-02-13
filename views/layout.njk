@@ -43,11 +43,19 @@
                 <a href="/demos">Demos</a>
               </li>
               <li><a href="/about">About</a></li>
+
+
               {% if user %}
-                <li class="user-welcome">{{ user.alias }}</li>
-                <li><a href="/auth/logout">Logout</a></li>
+                <li class="nav-user-item">
+                  <a href="/auth/profile" class="avatar-link">
+                    <img src="{{ user.avatar }}" alt="{{ user.alias }}" class="nav-avatar">
+                  </a>
+                  <a href="/auth/logout" class="logout-link">Logout</a>
+                </li>
               {% else %}
-                <li><button class="login-btn" id="openLoginBtn">Login</button></li>
+                <li>
+                  <button class="login-btn" id="openLoginBtn">Login</button>
+                </li>
               {% endif %}
             </ul>
           </nav>

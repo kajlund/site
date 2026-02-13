@@ -8,12 +8,11 @@
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">{{message}}</h1>
-      <div class="quote-wrapper">
-        <div class="quote-inner">
-          <p class="hero-quote" id="quoteText">&quot;{{quote.content}}&quot;</p>
-          <p class="hero-author" id="quoteAuthor">— {{quote.author}}</p>
-        </div>
-      </div>
+
+      <quote-island>
+        <span slot="content">{{ quote.content }}</span>
+        <span slot="author">{{ quote.author }}</span>
+      </quote-island>
 
       <div class="cta-group">
 			  <a href="/demos" class="btn-primary">View Demos</a>
@@ -21,4 +20,8 @@
 		  </div>
     </div>
   </section>
+{% endblock %}
+
+{% block scripts %}
+  <script type="module" src="/js/quote-island.js"></script>
 {% endblock %}

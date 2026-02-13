@@ -1,21 +1,23 @@
 import { asyncHandler } from '../utils/async-handler.js';
 import { getSiteService } from '../services/site.service.js';
+import { getApiService } from '../services/api.service.js';
 import { getAuthUtils } from '../utils/auth.utils.js';
 
 export function getSiteController(cnf, log) {
-  const svc = getSiteService(cnf, log);
+  const svcSite = getSiteService(cnf, log);
+  const svcApi = getApiService(cnf, log);
   const auth = getAuthUtils(cnf, log);
 
   return {
     generateSiteMap: asyncHandler(async (req, res) => {
-      const xml = await svc.generateSiteMap();
+      const xml = await svcSite.generateSiteMap();
       res.header('Content-Type', 'application/xml');
       res.send(xml);
     }),
     showHomeView: asyncHandler(async (req, res) => {
       const user = auth.getAuthUser(req);
+      const quote = await svcApi.fetchRandomQuote();
 
-      const quote = await svc.fetchRandomQuote();
       res.render('index', {
         title: 'Home',
         page: 'home',

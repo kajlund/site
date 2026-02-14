@@ -1,4 +1,6 @@
 import cookieParser from 'cookie-parser';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
 import express from 'express';
 import { rateLimit } from 'express-rate-limit';
 import nunjucks from 'nunjucks';
@@ -7,6 +9,8 @@ import httpLogger from 'pino-http';
 import { getRouter } from './routes/index.js';
 import { getErrorHandler } from './middleware/errorhandler.js';
 import { getNotFoundHandler } from './middleware/notfoundhandler.js';
+
+dayjs.extend(relativeTime);
 
 export function getApp(cnf, log) {
   const app = express();
@@ -46,6 +50,19 @@ export function getApp(cnf, log) {
       month: 'long',
       day: 'numeric',
     });
+  });
+
+  nj.addFilter('dateIso', function (date) {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Returns "2025-12-21"
+  });
+
+  nj.addFilter('date', (date, formatStr = 'YYYY-MM-DD') => {
+    const d = dayjs(date, formatStr, true); // strict parsing
+    if (!d.isValid()) return date; // Return original if invalid
+
+    return d.format(formatStr);
   });
 
   // Logging Middleware

@@ -1,123 +1,66 @@
-// Display Advice
-async function displayRandomQuote() {
-  // const res = await fetch('http://api.adviceslip.com/advice');
-  const response = await fetch(
-    'https://proverbs.kajlund.com/api/v1/proverbs/random',
-  );
-  if (response.ok) {
-    const res = await response.json();
-    console.log(res);
-    document.getElementById('quoteText').textContent = `"${res.data.content}"`;
-    document.getElementById('quoteAuthor').textContent = `— ${res.data.author}`;
-  } else {
-    console.error('Failed to fetch quote');
-    document.getElementById('quoteText').textContent = `"Moving along"`;
-    document.getElementById('quoteAuthor').textContent =
-      '— Keep moving forward...';
-  }
-}
-
-// Login Form Submission
-// const loginForm = document.getElementById('loginForm');
-// const errorMessage = document.getElementById('errorMessage');
-
-// loginForm.addEventListener('submit', async (e) => {
-//   e.preventDefault();
-
-//   const email = document.getElementById('email').value;
-//   const password = document.getElementById('password').value;
-//   const submitBtn = loginForm.querySelector('.btn-submit');
-
-//   // Clear previous error
-//   errorMessage.textContent = '';
-
-//   // Disable submit button
-//   submitBtn.disabled = true;
-//   submitBtn.textContent = 'Signing in...';
-
-//   try {
-//     const response = await fetch('https://authz.kajlund.com/auth/login', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ email, password }),
-//       // Important: This tells the browser to include/save the cookies!
-//       credentials: 'include',
-//     });
-
-//     const res = await response.json();
-
-//     if (response.ok) {
-//       // Store JWT token in localStorage
-//       localStorage.setItem('access_token', res?.data?.accessToken);
-
-//       // Optional: Store user info
-//       if (res?.data?.user) {
-//         localStorage.setItem('user_info', JSON.stringify(res.data.user));
-//       }
-
-//       // Success - close dialog and redirect or update UI
-//       closeLoginDialog();
-//       loginForm.reset();
-//       alert('Login successful!');
-
-//       // You can redirect to another page or update the UI here
-//       // window.location.href = '/dashboard';
-//     } else {
-//       errorMessage.textContent =
-//         res.data.message || 'Invalid email or password';
-//     }
-//   } catch (error) {
-//     console.error('Login error:', error);
-//     errorMessage.textContent = 'An error occurred. Please try again.';
-//   } finally {
-//     // Re-enable submit button
-//     submitBtn.disabled = false;
-//     submitBtn.textContent = 'Sign In';
-//   }
-// });
-
-// Check if user is already logged in
-function checkAuth() {
-  const token = localStorage.getItem('jwt_token');
-  if (token) {
-    // User is logged in, you can update UI accordingly
-    console.log('User is authenticated');
-    // You might want to hide login button and show logout button
-  }
-}
-
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  displayRandomQuote();
-  checkAuth();
-
-  // Change quote every 20 seconds
-  // setInterval(displayRandomQuote, 20000);
-});
-
-// Utility function to get JWT token
-function getAuthToken() {
-  return localStorage.getItem('jwt_token');
-}
-
-// Utility function to make authenticated requests
-async function authenticatedFetch(url, options = {}) {
-  const token = getAuthToken();
-
-  if (!token) {
-    throw new Error('No authentication token found');
-  }
-
-  const headers = {
-    ...options.headers,
-    Authorization: `Bearer ${token}`,
+  // --- 1. Element Selectors ---
+  const selectors = {
+    toggle: document.getElementById('menu-toggle'),
+    nav: document.getElementById('nav-links'),
+    overlay: document.getElementById('menu-overlay'),
+    loginModal: document.getElementById('loginModal'),
+    openLoginBtn: document.getElementById('openLoginBtn'),
   };
 
-  return fetch(url, { ...options, headers });
-}
+  // --- 2. Shared Functions ---
+  const closeMenu = () => {
+    selectors.nav?.classList.remove('active');
+    selectors.toggle?.classList.remove('active');
+    selectors.overlay?.classList.remove('active');
+    document.body.style.overflow = '';
+  };
 
-// Export utility functions for use in other scripts
-window.getAuthToken = getAuthToken;
-window.authenticatedFetch = authenticatedFetch;
+  const toggleMenu = () => {
+    const isOpen = selectors.nav?.classList.toggle('active');
+    selectors.toggle?.classList.toggle('active');
+    selectors.overlay?.classList.toggle('active');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  };
+
+  // --- 3. Event Listeners (With Null Checks) ---
+
+  // Burger Toggle
+  selectors.toggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  // Clicking the dark overlay to close
+  selectors.overlay?.addEventListener('click', closeMenu);
+
+  // Close menu when clicking any link
+  selectors.nav?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // --- 4. Login Modal Logic ---
+
+  // This is where your bug was: openLoginBtn might be missing if logged in!
+  if (selectors.openLoginBtn && selectors.loginModal) {
+    selectors.openLoginBtn.addEventListener('click', () => {
+      // Close mobile menu first if it's open
+      closeMenu();
+      // Open the Lit component
+      selectors.loginModal.open = true;
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Handle the custom event from our Lit component
+    selectors.loginModal.addEventListener('login-success', () => {
+      // Refresh the page to update Nunjucks nav (Hello, User!)
+      window.location.reload();
+    });
+  }
+
+  // --- 5. Global Clean-up ---
+  // If user hits the "Back" button or switches tabs, clean the UI
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') closeMenu();
+  });
+});

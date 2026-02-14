@@ -1,0 +1,32 @@
+{% extends "layout.njk" %}
+
+{% block head %}
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/profile.css">
+{% endblock %}
+
+{% block content %}
+<div class="container profile-page">
+  <div class="profile-card">
+    <header class="profile-header">
+      <img src="{{ profile.avatar or '/images/default-avatar.png' }}" class="large-avatar">
+      <h1>{{ profile.alias }}</h1>
+      <p class="email-tag">{{ profile.email }}</p>
+    </header>
+
+    <div class="profile-details">
+      <h3>About You</h3>
+      <p>{{ profile.bio or "No bio added yet." }}</p>
+
+      <div class="meta">
+        <span>Member since: {{ profile.createdAt | date("MMM YYYY") }}</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="/auth/profile/edit" class="btn-outline">Edit Profile</a>
+      <a href="/auth/logout" class="btn-text">Log Out</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

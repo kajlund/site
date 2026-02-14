@@ -4,7 +4,11 @@ export function getErrorHandler(log) {
   // eslint-disable-next-line no-unused-vars
   return (err, req, res, next) => {
     if (err.isAppError) {
-      return res.render('error', { title: 'Error', page: 'error', error: err });
+      return res.render('error.njk', {
+        title: 'Error',
+        page: 'error',
+        error: err,
+      });
     }
 
     // Generic error

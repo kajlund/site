@@ -21,6 +21,11 @@ export function getAuthRoutes(cnf, log) {
         middleware: [],
         handler: ctrl.logoff,
       },
+      {
+        method: 'get',
+        path: '/profile',
+        handler: ctrl.showProfile,
+      },
     ],
   };
 }

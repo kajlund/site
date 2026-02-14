@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico">
     <title>kajlund.com -{{ title }}</title>
-    <link rel="stylesheet" href="css/_root.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/button.css">
+    <link rel="stylesheet" href="/css/_root.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/button.css">
     {% block head %}{% endblock %}
     <script>
     </script>
@@ -44,7 +44,6 @@
               </li>
               <li><a href="/about">About</a></li>
 
-
               {% if user %}
                 <li class="nav-user-item">
                   <a href="/auth/profile" class="avatar-link">
@@ -65,103 +64,38 @@
 
     <main>
       {# Inject page content #}
-      {% block content %}{% endblock %}
+      {% block content %}
+      {% endblock %}
     </main>
-
-    <login-modal id="loginModal">
-    <div slot="form-fields">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" required>
-      </div>
-    </div>
-  </login-modal>
-
-    {# Mobile Menu Overlay #}
-    <div class="menu-overlay" id="menu-overlay"></div>
 
     {# Include SVG icons #}
     {% include "partials/icons.njk" %}
 
-    {# Include components #}
-    <script type="module" src="js/login-modal.js"></script>
+    <login-modal id="loginModal">
+      <div slot="form-fields">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" required>
+        </div>
+      </div>
+    </login-modal>
+
+    {# Mobile Menu Overlay #}
+    <div class="menu-overlay" id="menu-overlay"></div>
+
+    {# Include shared components #}
+    <script type="module" src="/js/login-modal.js"></script>
+
 
     {# Include app main script #}
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. Element Selectors ---
-        const selectors = {
-          toggle: document.getElementById('menu-toggle'),
-          nav: document.getElementById('nav-links'),
-          overlay: document.getElementById('menu-overlay'),
-          loginModal: document.getElementById('loginModal'),
-          openLoginBtn: document.getElementById('openLoginBtn')
-        };
-
-        // --- 2. Shared Functions ---
-        const closeMenu = () => {
-          selectors.nav?.classList.remove('active');
-          selectors.toggle?.classList.remove('active');
-          selectors.overlay?.classList.remove('active');
-          document.body.style.overflow = '';
-        };
-
-        const toggleMenu = () => {
-          const isOpen = selectors.nav?.classList.toggle('active');
-          selectors.toggle?.classList.toggle('active');
-          selectors.overlay?.classList.toggle('active');
-          document.body.style.overflow = isOpen ? 'hidden' : '';
-        };
-
-        // --- 3. Event Listeners (With Null Checks) ---
-
-        // Burger Toggle
-        selectors.toggle?.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleMenu();
-        });
-
-        // Clicking the dark overlay to close
-        selectors.overlay?.addEventListener('click', closeMenu);
-
-        // Close menu when clicking any link
-        selectors.nav?.querySelectorAll('a').forEach(link => {
-          link.addEventListener('click', closeMenu);
-        });
-
-        // --- 4. Login Modal Logic ---
-
-        // This is where your bug was: openLoginBtn might be missing if logged in!
-        if (selectors.openLoginBtn && selectors.loginModal) {
-          selectors.openLoginBtn.addEventListener('click', () => {
-            // Close mobile menu first if it's open
-            closeMenu();
-            // Open the Lit component
-            selectors.loginModal.open = true;
-            document.body.style.overflow = 'hidden';
-          });
-
-          // Handle the custom event from our Lit component
-          selectors.loginModal.addEventListener('login-success', () => {
-            // Refresh the page to update Nunjucks nav (Hello, User!)
-            window.location.reload();
-          });
-        }
-
-        // --- 5. Global Clean-up ---
-        // If user hits the "Back" button or switches tabs, clean the UI
-        document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible') closeMenu();
-        });
-      });
-    </script>
+    <script src="/js/main.js" type="module"></script>
 
     {# Include individual page scripts #}
-    {% block scripts %}{% endblock %}
-
+    {% block scripts %}
+    {% endblock %}
   </body>
 </html>

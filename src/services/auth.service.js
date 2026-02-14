@@ -1,3 +1,5 @@
+import { AppError } from '../utils/errors.js';
+
 export function getAuthService(cnf, log) {
   return {
     logonUser: async (data) => {
@@ -29,6 +31,26 @@ export function getAuthService(cnf, log) {
           detail: 'Authentication service unavailable',
         };
         return result;
+      }
+    },
+    getProfile: async (token) => {
+      try {
+        const response = await fetch(`${cnf.authUrl}/auth/me`, {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!response.ok) throw new Error('Could not fetch profile');
+
+        const result = await response.json();
+        log.info(result);
+        return result.data;
+      } catch (err) {
+        log.error(err, 'Profile relay error:');
+        throw new AppError(
+          500,
+          'Fetching profile failed',
+          'Authentication service unavailable',
+        );
       }
     },
   };

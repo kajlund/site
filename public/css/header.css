@@ -145,6 +145,7 @@ header {
   object-fit: cover; /* Prevents stretching if the image isn't square */
   border: 2px solid var(--color-primary);
   background-color: var(--color-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logout-link {

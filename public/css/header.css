@@ -46,6 +46,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: var(--header-height);
   max-width: 1200px; /* Optional: keeps your header from stretching too wide */
   margin: 0 auto;
   height: 100%;
@@ -110,15 +111,19 @@ header {
 /* Nav Links: Horizontal by default (Desktop) */
 .nav-links {
   display: flex;
-  list-style: none;
   align-items: center;
-  gap: 1.5rem;
+  list-style: none;
+  gap: 2rem;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   z-index: 2001; /* Higher than the overlay */
 }
 
 .nav-user-item {
   display: flex;
   align-items: center;
+  height: 100%;
   gap: 1.5rem;
 }
 
@@ -133,8 +138,9 @@ header {
 }
 
 .nav-avatar {
-  width: 3.5rem;
-  height: 3.5rem;
+  display: block;
+  width: 3.8rem;
+  height: 3.8rem;
   border-radius: 50%;
   object-fit: cover; /* Prevents stretching if the image isn't square */
   border: 2px solid var(--color-primary);

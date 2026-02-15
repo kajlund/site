@@ -83,3 +83,61 @@
 .btn-text:hover {
   color: #ff4d4d; /* Red for logout hint */
 }
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-group label {
+  display: block;
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.8rem;
+  color: white;
+  font-size: 1.6rem;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.form-divider {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 2rem 0;
+}
+
+.readonly-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.info-bit label {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.info-bit span {
+  font-weight: 700;
+  color: var(--color-text);
+}

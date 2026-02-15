@@ -53,5 +53,37 @@ export function getAuthService(cnf, log) {
         );
       }
     },
+    updateProfile: async (token, id, profileData) => {
+      try {
+        const response = await fetch(`${cnf.authUrl}/auth/me/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(profileData),
+        });
+        if (!response.ok) {
+          const errorPayload = await response.json();
+          log.error(errorPayload, 'Profile update relay error:');
+          throw new AppError(
+            response.status,
+            'Profile update failed',
+            errorPayload.detail || 'Unknown error',
+          );
+        }
+
+        const result = await response.json();
+        log.info(result);
+        return result.data;
+      } catch (err) {
+        log.error(err, 'Profile update relay error:');
+        throw new AppError(
+          500,
+          'Profile update failed',
+          'Authentication service unavailable',
+        );
+      }
+    },
   };
 }

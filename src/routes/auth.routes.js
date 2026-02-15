@@ -26,6 +26,16 @@ export function getAuthRoutes(cnf, log) {
         path: '/profile',
         handler: ctrl.showProfile,
       },
+      {
+        method: 'get',
+        path: '/profile/edit',
+        handler: ctrl.showEditProfile,
+      },
+      {
+        method: 'post',
+        path: '/profile/update',
+        handler: ctrl.updateProfile,
+      },
     ],
   };
 }

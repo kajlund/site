@@ -6,6 +6,7 @@ import { rateLimit } from 'express-rate-limit';
 import nunjucks from 'nunjucks';
 import httpLogger from 'pino-http';
 
+import { forwardQuery } from './middleware/urlparams.js';
 import { getRouter } from './routes/index.js';
 import { getErrorHandler } from './middleware/errorhandler.js';
 import { getNotFoundHandler } from './middleware/notfoundhandler.js';
@@ -69,6 +70,9 @@ export function getApp(cnf, log) {
   if (cnf.logHttp) {
     app.use(httpLogger({ logger: log }));
   }
+
+  // Custom middleware to forward req.query to templates
+  app.use(forwardQuery());
 
   // Add routes
   app.use(getRouter(cnf, log));

@@ -143,14 +143,16 @@ export class LoginModal extends LitElement {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
+      const toast = document.getElementById('globalToast');
 
       if (!response.ok) {
         const data = await response.json();
+        toast.show(data.detail, 'error');
+
         throw new Error(data.detail || 'Login failed');
       }
 
       // Success logic
-      console.log('Success! Closing modal.');
       this.dispatchEvent(new CustomEvent('login-success'));
       this.close();
     } catch (err) {

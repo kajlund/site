@@ -71,6 +71,7 @@
     {# Include SVG icons #}
     {% include "partials/icons.njk" %}
 
+    {# Shared WebComponents #}
     <login-modal id="loginModal">
       <div slot="form-fields">
         <div class="form-group">
@@ -84,17 +85,19 @@
       </div>
     </login-modal>
 
+    <alert-toast id="globalToast"></alert-toast>
+
     {# Mobile Menu Overlay #}
     <div class="menu-overlay" id="menu-overlay"></div>
-
-    {# Include shared components #}
-    <script type="module" src="/js/login-modal.js"></script>
-
 
     {# Include app main script #}
     <script src="/js/main.js" type="module"></script>
 
-    {# Include individual page scripts #}
+    {# Include shared components #}
+    <script type="module" src="/js/alert-toast.js"></script>
+    <script type="module" src="/js/login-modal.js"></script>
+
+    {# Scripts block for individual pages #}
     {% block scripts %}
     {% endblock %}
   </body>

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // --- 1. Element Selectors ---
   const selectors = {
     toggle: document.getElementById('menu-toggle'),
@@ -6,7 +6,36 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay: document.getElementById('menu-overlay'),
     loginModal: document.getElementById('loginModal'),
     openLoginBtn: document.getElementById('openLoginBtn'),
+    alertToast: document.getElementById('globalToast'),
   };
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.has('openLogin')) {
+    // Wait for Lit to define the component before setting properties
+    await customElements.whenDefined('login-modal');
+    if (selectors.loginModal) {
+      selectors.loginModal.open = true;
+    }
+    // Optional: Clean the URL so it doesn't reopen on refresh
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // --- Handle Toast messages from Server ---
+  if (urlParams.has('updated')) {
+    await customElements.whenDefined('alert-toast');
+    selectors.alertToast?.show('Profile updated successfully!', 'success');
+  }
+
+  if (urlParams.has('error')) {
+    await customElements.whenDefined('alert-toast');
+    selectors.alertToast?.show('An error occurred.', 'error');
+  }
+
+  // Clean URL so params don't persist on refresh
+  if (window.location.search) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
 
   // --- 2. Shared Functions ---
   const closeMenu = () => {

@@ -3,34 +3,23 @@ import { AppError } from '../utils/errors.js';
 export function getAuthService(cnf, log) {
   return {
     logonUser: async (data) => {
-      const result = { token: '', error: null };
-
       try {
         const response = await fetch(`${cnf.authUrl}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
-
         const payload = await response.json();
 
-        if (!response.ok) {
-          result.error = payload;
-          log.error(payload, 'Auth relay error:');
+        if (response.ok) {
+          return { token: payload.data.accessToken, error: null };
         } else {
-          result.token = payload.data.accessToken;
+          log.error(payload, 'Auth relay error:');
+          return { token: null, error: payload.detail || 'Login failed' };
         }
-
-        return result;
       } catch (error) {
         log.error(error, 'Auth relay error:');
-        result.error = {
-          success: false,
-          statusCode: 500,
-          message: 'Internal server error',
-          detail: 'Authentication service unavailable',
-        };
-        return result;
+        return { token: null, error: 'Authentication service unavailable' };
       }
     },
     getProfile: async (token) => {

@@ -18,6 +18,8 @@ export class AlertToast extends LitElement {
       right: 2rem;
       z-index: 9999;
       pointer-events: none;
+      /* Ensure the host itself doesn't cause scrollbars */
+      overflow: visible;
     }
     .toast {
       padding: 1.2rem 2.4rem;
@@ -25,15 +27,28 @@ export class AlertToast extends LitElement {
       color: white;
       font-weight: 600;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-      transform: translateX(120%);
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+      /* The Fix: Start hidden and shifted */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(100%);
+
+      transition:
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        opacity 0.3s ease,
+        visibility 0.3s;
+
       pointer-events: auto;
       display: flex;
       align-items: center;
       gap: 1rem;
       border-left: 5px solid rgba(0, 0, 0, 0.2);
     }
+
+    /* When open, bring it back and make it visible */
     :host([open]) .toast {
+      opacity: 1;
+      visibility: visible;
       transform: translateX(0);
     }
 
@@ -58,9 +73,14 @@ export class AlertToast extends LitElement {
   }
 
   show(message, type = 'info') {
-    this.message = message;
-    this.type = type;
-    this.open = true;
+    this.open = false; // Reset in case it's already open
+    // Tiny delay to allow the "close" to register before "re-opening"
+    // if you want the animation to re-run
+    setTimeout(() => {
+      this.message = message;
+      this.type = type;
+      this.open = true;
+    }, 50);
   }
 
   render() {

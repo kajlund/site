@@ -147,9 +147,9 @@ export class LoginModal extends LitElement {
 
       if (!response.ok) {
         const data = await response.json();
-        toast.show(data.detail, 'error');
+        toast.show(data.error, 'error');
 
-        throw new Error(data.detail || 'Login failed');
+        throw new Error(data.error || 'Login failed');
       }
 
       // Success logic

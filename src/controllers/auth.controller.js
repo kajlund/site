@@ -19,7 +19,7 @@ export function getAuthController(cnf, log) {
     logon: asyncHandler(async (req, res) => {
       const data = req.body;
       const { token, error } = await svc.logonUser(data);
-      if (error) return res.status(error.statusCode).json(error);
+      if (error) return res.status(401).json({ success: false, error });
 
       res.cookie('token', token, cookieOptions).json({ success: true });
     }),

@@ -5,10 +5,37 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <section class="demos">
-      <h1 class="title">Demos</h1>
-      <p>Coming up...</p>
-    </section>
-  </div>
+  <section class="demos-container">
+    <div class="title">
+      <h2>Project Demos</h2>
+      <p class="intro">Explore some of the sites and apps I've built.</p>
+    </div>
+
+    <div class="demo-list">
+      <article class="demo-card">
+        <div class="demo-image">
+          <img src="/img/proverbsapp.png" alt="Proverbs app screenshot">
+        </div>
+        <div class="demo-info">
+          <h3>Proverbs</h3>
+          <p>A full-stack application built with Node.js/Express, PostgreSQL using Nunjucks templating on the backend plus HTML, CSS & JavaScript (Lit WebComponents) on the frontend.</p>
+
+          <div class="demo-tags">
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Nunjucks</span>
+            <span class="tag">Lit</span>
+            <span class="tag">WebComponents</span>
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+          </div>
+          <a href="https://proverbs.kajlund.com" class="btn-demo" target="_blank">
+            Open App <span>&nearrow;</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
 {% endblock %}

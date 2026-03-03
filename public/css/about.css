@@ -5,7 +5,7 @@
 
 .about-content {
   display: flex;
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 
 .about-img {
@@ -20,7 +20,7 @@
 
 .history {
   margin-top: 4rem;
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 
 .history h2 {
